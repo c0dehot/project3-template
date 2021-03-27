@@ -21,7 +21,7 @@ Before deploying to an external server, TEST the production output locally:
 `npm run build`
 
 2. Run in production-mode (which serves this react production build code):
-`NODEMON=production npm start`
+`NODE_ENV=production npm start`
 
 ## Deployment to Heroku
 You did 'testing production', right?
