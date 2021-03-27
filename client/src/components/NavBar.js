@@ -14,10 +14,10 @@ function NavBar() {
     const { status, userData, message }= await fetchJSON( `/api/users/session` )
     console.log( `[NavBar] attempted to reload session, result(${status}) message(${message})` )
     if( !status ){
-       // clear any session
-       localStorage.session = ''
-       dispatch({ type: 'ALERT_MESSAGE', message })
-       return
+      // clear any session
+      localStorage.session = ''
+      dispatch({ type: 'USER_LOGOUT', message })
+      return
     }
     dispatch({ type: 'USER_LOGIN', data: userData })
   }
@@ -37,14 +37,14 @@ function NavBar() {
   
   useEffect( function(){
     // on load let's get the session if it's blank (Ex browser reload)
-    if( localStorage.session && !authOk ){
+    if( localStorage.session===36 && !authOk ){
       loadUserSession()
     }
   }, [] )
 
   return ( 
     <>
-    { !authOk ? <Redirect to='/login' /> :
+    { localStorage.session.length!==36 && !authOk ? <Redirect to='/login' /> :
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <NavLink to="/" className="navbar-brand">
           <img src='https://upload.wikimedia.org/wikipedia/commons/7/79/Mountain_icon_%28Noun_Project%29.svg' alt="" width="64" height="64" />
