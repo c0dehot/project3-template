@@ -11,8 +11,8 @@ This attempts to highlight powerful intra-component communication, yet simple de
 Modify the .env file and put in the mongo info (if different that default)
 MONGODB_URI=
 
-## Run Locally
-npm run start:dev
+## Run Development 
+`npm run start:dev`
 
 ## Testing Production
 Before deploying to an external server, TEST the production output locally:
