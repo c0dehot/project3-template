@@ -6,10 +6,10 @@ import NavBar from "./components/NavBar"
 import Footer from "./components/Footer"
 import AlertBar from "./components/AlertBar"
 // pages
-import Tasks from "./components/Tasks"
-import Register from "./components/Register"
-import Login from "./components/Login"
-import Logout from "./components/Logout"
+import Tasks from "./pages/Tasks"
+import Register from "./pages/Register"
+import Login from "./pages/Login"
+import Logout from "./pages/Logout"
 
 function App() {
   return (

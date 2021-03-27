@@ -9,29 +9,30 @@ function Login(){
     const inputEmail = useRef()
     const inputPassword = useRef()
     const inputRememberMe = useRef()
+    const refForm = useRef()
 
     async function userLogin( e ){
-        console.log( `[userLogin]` )
         e.preventDefault()
+        console.log( `[userLogin]` )
         
+        // leverage browser built in + bootstrap features for form validation
+        if( !refForm.current.checkValidity() ){            
+            refForm.current.classList.add('was-validated')
+            return
+        }
+
         const saveData = {
             email: inputEmail.current.value,
             password: inputPassword.current.value,
             rememberMe: inputRememberMe.current.checked
         }
 
-        if( saveData.email === "" ) {
+        if( saveData.email.indexOf('@')<3 || saveData.password.length<8 ) {
             inputEmail.current.focus()
-            dispatch({ type: 'ALERT_MESSAGE', message: 'Please enter your email!' })
+            dispatch({ type: 'ALERT_MESSAGE', message: 'Something is wrong with your login.' })
             return
         }
     
-        if( saveData.password === "" || saveData.password.length < 8 ) {
-            inputPassword.current.focus()
-            dispatch({ type: 'ALERT_MESSAGE', message: 'Please enter your password!' })
-            return
-        }
-
         const { status, session, userData, message }= await fetchJSON( '/api/users/login', 'post', saveData )            
         if( !status ){
             // clear any session
@@ -61,7 +62,7 @@ function Login(){
     return (
         <>
             { authOk ? <Redirect to='/tasks' /> : '' }
-            <form>
+            <form ref={refForm}>
             <div class="card mt-5">
                 <div class="card-header">
                     <h1>Login</h1>
@@ -69,11 +70,17 @@ function Login(){
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input ref={inputEmail} id="email" type="email" class="form-control" />
+                        <input ref={inputEmail} id="email" type="email" class="form-control" required />
+                        <div class="invalid-feedback">
+                            Please enter your login email
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="userPassword">Password</label>
-                        <input ref={inputPassword} id="userPassword" type="password" class="form-control" />
+                        <input ref={inputPassword} id="userPassword" type="password" class="form-control"  pattern=".{8,}" required />
+                        <div class="invalid-feedback">
+                            Please enter your password (8 chars min)
+                        </div>
                     </div>
                 </div>                    
                 <div class="card-footer">

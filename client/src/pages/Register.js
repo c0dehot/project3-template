@@ -9,29 +9,27 @@ function Register(){
     const inputEmail = useRef()
     const inputPassword = useRef()
     const inputName = useRef()
+    const refForm = useRef()
 
     async function registerUser( e ){
         e.preventDefault()
         
+        // leverage browser built in + bootstrap features for form validation
+        if( !refForm.current.checkValidity() ){            
+            refForm.current.classList.add('was-validated')
+            return
+        }
+
         const regData = {
             name: inputName.current.value.trim(),
             email: inputEmail.current.value.trim(),
             password: inputPassword.current.value.trim()
         }
 
-        if( regData.name.length<3 ){
+        // just to make sure the browser validation worked, we double-check
+        if( regData.name.length<2 || regData.email.indexOf('@')<2 || regData.password.length<5 ){
             inputName.current.focus()
-            dispatch({ type: 'ALERT_MESSAGE', message: "You need a longer name" })
-            return
-        }
-        if( regData.email.indexOf('@')<3 ){
-            inputEmail.current.focus()
-            dispatch({ type: 'ALERT_MESSAGE', message: "You need a leggit email" })
-            return
-        }
-        if( regData.password.length<5 ){
-            inputPassword.current.focus()
-            dispatch({ type: 'ALERT_MESSAGE', message: "You need a longer password" })
+            dispatch({ type: 'ALERT_MESSAGE', message: "Something is wrong with your form" })
             return
         }
 
@@ -56,7 +54,7 @@ function Register(){
     return (
         <>
             { authOk ? <Redirect to='/tasks' /> : '' }
-            <form>
+            <form ref={refForm}>
             <div class="card mt-5">
                 <div class="card-header">
                     <h1>User Registration</h1>
@@ -64,15 +62,25 @@ function Register(){
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="name">First Name</label>
-                        <input ref={inputName} type="text" id="name" class="form-control" />
+                        <input ref={inputName} type="text" id="name" class="form-control" required />
+                        <div class="invalid-feedback">
+                            Please enter a name
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="email">Email Address</label>
-                        <input ref={inputEmail} id="email" type="email" class="form-control" />
+                        <input ref={inputEmail} id="email" type="email" class="form-control" required />
+                        <div class="invalid-feedback">
+                            Please enter an email
+                        </div>
+
                     </div>
                     <div class="mb-3">
                         <label for="userPassword">Password</label>
-                        <input ref={inputPassword} id="userPassword" type="password" class="form-control" />
+                        <input ref={inputPassword} id="userPassword" type="password" class="form-control"  pattern=".{8,}" required />
+                        <div class="invalid-feedback">
+                            Please enter a password (8 chars min)
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">
