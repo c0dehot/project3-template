@@ -4,7 +4,7 @@ import { useStoreContext } from "../utils/GlobalStore"
 import fetchJSON from "../utils/API"
 
 function Login(){
-    const [ { authOk }, dispatch ]= useStoreContext()
+    const [{ authOk }, dispatch ]= useStoreContext()
 
     const inputEmail = useRef()
     const inputPassword = useRef()
@@ -32,7 +32,7 @@ function Login(){
             return
         }
 
-        const { status, session, userData, message }=await fetchJSON( '/api/users/login', 'post', saveData )            
+        const { status, session, userData, message }= await fetchJSON( '/api/users/login', 'post', saveData )            
         if( !status ){
             // clear any session
             localStorage.session = ''

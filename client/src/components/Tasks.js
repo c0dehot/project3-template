@@ -3,7 +3,7 @@ import { useStoreContext } from "../utils/GlobalStore"
 import fetchJSON from "../utils/API"
 
 function Tasks() {
-  const [ { alert, tasks, name }, dispatch ]= useStoreContext()
+  const [{ alert, tasks, name }, dispatch ]= useStoreContext()
 
   const inputRef = useRef()
 

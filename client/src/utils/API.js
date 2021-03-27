@@ -3,6 +3,7 @@
     additional error / message handling for all API calls...
 */
 function fetchJSON( url, method='get', data={} ){
+    method = method.toLowerCase()
     const fetchOptions = {
         method,
         headers: {

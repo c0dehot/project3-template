@@ -4,14 +4,14 @@ import { useStoreContext } from "../utils/GlobalStore"
 import fetchJSON from "../utils/API"
 
 function Register(){
-    const [ { authOk }, dispatch ] = useStoreContext()
+    const [{ authOk }, dispatch ] = useStoreContext()
 
     const inputEmail = useRef()
     const inputPassword = useRef()
     const inputName = useRef()
 
     async function registerUser( e ){
-        e.preventDefault();
+        e.preventDefault()
         
         const regData = {
             name: inputName.current.value.trim(),

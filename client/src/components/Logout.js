@@ -4,14 +4,14 @@ import { useStoreContext } from "../utils/GlobalStore"
 import fetchJSON from "../utils/API"
 
 function Logout(){
-    const [ { authOk }, dispatch ]= useStoreContext()
+    const [{ authOk }, dispatch ]= useStoreContext()
 
     
     async function userLogout(){
         // call the api to logout (and clear session)
         const { message } = await fetchJSON( '/api/users/logout' )
         // logout
-        localStorage.session = '';
+        localStorage.session = ''
         dispatch({ type: 'USER_LOGOUT', message })
     }
     

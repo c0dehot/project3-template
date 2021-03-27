@@ -15,12 +15,12 @@ function AlertBar() {
 
   useEffect( function(){
     if( alert ){
-      // we see a alert has been pushed, so let's set a clear for this alert
-      // debounce an previous pending clears
+      // monitor alert variable, if it is set, we trigger a 3s timer to clear it
+      // (debounce an previous pending clears)
       if( timeout ){
         clearTimeout( timeout )
       }
-      timeout = setTimeout( clearAlert, 5000 )
+      timeout = setTimeout( clearAlert, 3000 )
     }
   }, [ alert ])
   
