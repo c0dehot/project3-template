@@ -3,7 +3,7 @@ import { useStoreContext } from "../utils/GlobalStore"
 import fetchJSON from "../utils/API"
 
 function Tasks() {
-  const [ { alert, tasks }, dispatch ]= useStoreContext()
+  const [ { alert, tasks, name }, dispatch ]= useStoreContext()
 
   const inputRef = useRef()
 
@@ -44,11 +44,11 @@ function Tasks() {
       <form>
       <div class="card">
           <div class="card-header">
-              <h1>Task List</h1>
+              <h1>{name}'s Task List</h1>
           </div>
           <div  class="card-body">
               <ul id="taskList" class="list-group">
-                {tasks && tasks.map( task=><li class="list-group-item">{task.name}</li> )}
+                {tasks && tasks.map( task=><li key={task._id} class="list-group-item">{task.name}</li> )}
               </ul>
           </div>
 

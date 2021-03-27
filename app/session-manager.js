@@ -3,8 +3,8 @@ const uuid = require( 'uuid' )
 // track valid sessions in memory for speed & ease of implementation
 let userSessions = []
 
-function verify( requestSession ){
-   if( userSessions.length<1 ) {
+function verifyAndLoad( requestSession ){
+   if( userSessions.length<1 || requestSession.length!==36 ) {
       return false
    }
    const sessionMatch = userSessions.filter( sessionData=>sessionData.session===requestSession )
@@ -14,7 +14,6 @@ function verify( requestSession ){
 
 function create( userId ){
    session = uuid.v4()
-   // remember this session
    userSessions.push( { session, userId } )
    return session
 }
@@ -24,4 +23,4 @@ function remove( userSession ){
    userSessions = userSessions.filter( sessionData=>sessionData.session!==userSession )
 }
 
-module.exports = { verify, create, remove }
+module.exports = { verifyAndLoad, create, remove }

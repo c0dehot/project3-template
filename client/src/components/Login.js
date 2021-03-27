@@ -41,7 +41,7 @@ function Login(){
         }
 
         // remember email if user wanted
-        if( inputRememberMe.current.checked ){
+        if( inputRememberMe && inputRememberMe.current.checked ){
             localStorage.email = inputEmail.current.value
         } else {
             localStorage.email = ''

@@ -19,7 +19,7 @@ app.use(express.json())
 if (process.env.NODE_ENV === 'production') {
    // for serving REACT production-build content
    console.log( '> production: static from client/build' )
-   app.use( express.static('client/build') )
+   app.use( express.static(path.join('client','build')) )
 } else {
    // for serving all the normal html
    app.use( express.static('public') )

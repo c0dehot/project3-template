@@ -7,9 +7,6 @@ mongoose.connect(process.env.MONGODB_URI,
 // include mongoose models (it will include each file in the models directory)
 const db = require( './models' )
 
-// Note: if the user exists, it will UPDATE the session
-// input: <object> { name, email, password }
-// output: { message, id, name }
 async function userRegister( userData ){
    if( !userData.name || !userData.email || !userData.password ){
       console.log( '[registerUser] invalid userData! ', userData )
@@ -48,8 +45,6 @@ async function userRegister( userData ){
    }
 }
 
-// input: email, password
-// output: <object> { userId, firstName, lastName, emailAddress, creationTime } || false
 async function userLogin( email, password ) {
    const userData = await db.users.findOne({ email: email }, '-createdAt -updatedAt')
    if( !userData._id ) {
@@ -75,18 +70,18 @@ async function userLogin( email, password ) {
    }
 }
 
-async function taskList( ownerId ){
+async function taskList( ownerId, message='' ){
    // refuse duplicate user emails
-   const tasks = await db.tasks.find({ ownerId })
+   const tasks = await db.tasks.find({ ownerId }, '-ownerId -__v')
 
    return {
       status: true,
-      message: '',
+      message,
       tasks
    }
 }
 
-async function taskSave( newTask, ownerId ){
+async function taskSaveAndList( newTask, ownerId ){
    // refuse duplicate user emails
    const result = await db.tasks.create({ name: newTask, ownerId })
    if( !result._id ){
@@ -96,17 +91,12 @@ async function taskSave( newTask, ownerId ){
       }
    }
 
-   const tasks = await db.tasks.find({ ownerId })
-   return {
-      status: true,
-      tasks,
-      message: 'Task saved'
-   }
+   return taskList( ownerId, 'Task saved' )
 }
 
 module.exports = {
    userRegister,
    userLogin,
    taskList,
-   taskSave
+   taskSaveAndList
 };
