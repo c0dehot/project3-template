@@ -14,15 +14,14 @@
     "build": "cd client && npm run build",
     "heroku-postbuild": "npm run build"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Filipe Laborde",
+  "license": "MIT",
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "bcrypt": "^4.0.1",
     "mongoose": "^5.9.26",
-    "uuid": "^8.3.2",
-    "if-env": "^1.0.4"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "concurrently": "^6.0.0",

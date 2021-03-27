@@ -36,6 +36,6 @@ if (process.env.NODE_ENV === 'production') {
    })
 }
 
-app.listen(PORT, function() {
+app.listen(PORT, function(){
    console.log( `Serving app on: http://localhost:${PORT}` )
 })
