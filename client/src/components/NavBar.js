@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import { Redirect, NavLink, useLocation  } from "react-router-dom"
 import { useStoreContext } from "../utils/GlobalStore"
+import fetchJSON from '../utils/API'
 
 let timeout
 
 function NavBar() {
+  const [{ authOk, name }, dispatch ]= useStoreContext()
   const [ showMenu, setShowMenu ] = useState( false )
-  const [{ authOk, name }]= useStoreContext()
   const location = useLocation()
+
+  async function loadUserSession(){
+    const { status, userData, message }= await fetchJSON( `/api/users/session` )
+    console.log( `[NavBar] attempted to reload session, result(${status}) message(${message})` )
+    if( !status ){
+       // clear any session
+       localStorage.session = ''
+       dispatch({ type: 'ALERT_MESSAGE', message })
+       return
+    }
+    dispatch({ type: 'USER_LOGIN', data: userData })
+  }
 
   useEffect( function(){
     if( showMenu ){
@@ -22,6 +35,13 @@ function NavBar() {
     setShowMenu( false )
   }, [ location ])
   
+  useEffect( function(){
+    // on load let's get the session if it's blank (Ex browser reload)
+    if( localStorage.session && !authOk ){
+      loadUserSession()
+    }
+  }, [] )
+
   return ( 
     <>
     { !authOk ? <Redirect to='/login' /> :

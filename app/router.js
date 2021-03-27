@@ -45,6 +45,16 @@ function router( app ){
    })
 
    // all these endpoints require VALID session info
+   app.get('/api/users/session', authRequired, async function(req, res) {
+      const { status, userData, message }= await orm.userSession( req.sessionData.userId )
+      if( !status ){
+         res.status(403).send({ status, message }); return
+      }
+
+      console.log( '.. session was ok, resending data' )
+      res.send({ status, session, userData, message })
+   })
+
    app.get('/api/users/logout', authRequired, async function(req, res) {
       sessionManager.remove( req.header.session )
       console.log( ` .. removed session ${req.header.session}`)

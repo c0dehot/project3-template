@@ -46,9 +46,9 @@ async function userRegister( userData ){
 }
 
 async function userLogin( email, password ) {
-   const userData = await db.users.findOne({ email: email }, '-createdAt -updatedAt')
-   if( !userData._id ) {
-      return { status: false, message: 'Invalid password' }
+   const userData = await db.users.findOne({ email: email } )
+   if( !userData || !userData._id ) {
+      return { status: false, message: 'Invalid login' }
    }
 
    // compare the passwords to see if valid login
@@ -61,6 +61,23 @@ async function userLogin( email, password ) {
    return {
       status: true,
       message: `Logging in ${userData.name}...`,
+      userData: {
+         id: userData._id,
+         name: userData.name,
+         email: userData.email,
+         thumbnail: userData.thumbnail
+      }
+   }
+}
+
+async function userSession( userId ){
+   const userData = await db.users.findOne({ _id: userId })
+   if( !userData || !userData._id ) {
+      return { status: false, message: 'Invalid session' }
+   }
+   return {
+      status: true,
+      message: '',
       userData: {
          id: userData._id,
          name: userData.name,
@@ -97,6 +114,7 @@ async function taskSaveAndList( newTask, ownerId ){
 module.exports = {
    userRegister,
    userLogin,
+   userSession,
    taskList,
    taskSaveAndList
 };
