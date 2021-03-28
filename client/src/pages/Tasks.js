@@ -10,7 +10,8 @@ function Tasks() {
   async function tasksLoad(){
     const { status, tasks: newTasks, message }= await fetchJSON( '/api/tasks' )
     if( !status ){
-      dispatch({ type: "ALERT_MESSAGE", message })
+      // for simplicity, we simply log user out if an error (ex. forbidden for invalid session)
+      dispatch({ type: "USER_LOGOUT", message })
       return
     }
 

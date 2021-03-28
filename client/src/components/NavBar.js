@@ -15,7 +15,6 @@ function NavBar() {
     console.log( `[NavBar] attempted to reload session, result(${status}) message(${message})` )
     if( !status ){
       // clear any session
-      localStorage.session = ''
       dispatch({ type: 'USER_LOGOUT', message })
       return
     }
@@ -36,36 +35,36 @@ function NavBar() {
   }, [ location ])
   
   useEffect( function(){
-    // on load let's get the session if it's blank (Ex browser reload)
-    if( localStorage.session===36 && !authOk ){
+    // on load let's get try to get the  session (if one exists)
+    if( localStorage.session && !authOk ){
       loadUserSession()
     }
   }, [] )
 
   return ( 
     <>
-    { localStorage.session.length!==36 && !authOk ? <Redirect to='/login' /> :
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <NavLink to="/" className="navbar-brand">
-          <img src='https://upload.wikimedia.org/wikipedia/commons/7/79/Mountain_icon_%28Noun_Project%29.svg' alt="" width="64" height="64" />
-      </NavLink>
-      <button onClick={() => setShowMenu(!showMenu)} class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      { localStorage.session && 
+         <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <NavLink to="/" className="navbar-brand">
+              <img src='https://upload.wikimedia.org/wikipedia/commons/7/79/Mountain_icon_%28Noun_Project%29.svg' alt="" width="64" height="64" />
+          </NavLink>
+          <button onClick={() => setShowMenu(!showMenu)} class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-      <div className={`collapse navbar-collapse `+(showMenu ? 'show' : '')} id="navbar">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li className="nav-item">
-            <NavLink to="/tasks" className="nav-link" activeClassName="active">Tasks</NavLink>
-          </li>          
-          <li className="nav-item">
-            <NavLink to="/logout" className="nav-link">Logout</NavLink>
-          </li> 
-        </ul>
-        { name && <div class="d-flex"><div class="mx-3">Welcome back <u>{name}</u></div></div> }
-      </div>
-    </nav>
-    }
+          <div className={`collapse navbar-collapse `+(showMenu ? 'show' : '')} id="navbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <NavLink to="/tasks" className="nav-link" activeClassName="active">Tasks</NavLink>
+              </li>          
+              <li className="nav-item">
+                <NavLink to="/logout" className="nav-link">Logout</NavLink>
+              </li> 
+            </ul>
+            { name && <div class="d-flex"><div class="mx-3">Welcome back <u>{name}</u></div></div> }
+          </div>
+        </nav>
+      }
     </>
   )
 }

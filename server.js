@@ -6,6 +6,11 @@ const apiRouter = require('./app/router')
 const app = express()
 
 const PORT = process.env.PORT || 8080
+const API_URL = process.env.NODE_ENV === 'production' ?
+   'https://yoursite.herokuapp.com' : `http://localhost:${PORT}`
+// production uses REACT production-build content
+const STATIC_PATH = process.env.NODE_ENV === 'production' ?
+   path.join('client','build') : path.join('client','public')
 
 if( !process.env.MONGODB_URI ){
    console.log( '*ERROR* You need a .env file (with MONGODB_URI,...)' )
@@ -16,17 +21,12 @@ if( !process.env.MONGODB_URI ){
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-if (process.env.NODE_ENV === 'production') {
-   // for serving REACT production-build content
-   console.log( '> production: static from client/build' )
-   app.use( express.static(path.join('client','build')) )
-} else {
-   // for serving all the normal html
-   app.use( express.static('public') )
-}
+// static paths (ex. assets, js, images, etc) served automatically from:
+app.use(express.static( STATIC_PATH ))
 
-// for routes
-apiRouter(app)
+// all our RESTful API routes come from
+apiRouter( app, API_URL, STATIC_PATH )
+
 
 // **OPTIONAL** If your REACT routing allows non-standard paths (ex. fake paths for React-Router)
 // THEN you need to enable this for server-side serving to work
@@ -34,8 +34,9 @@ if (process.env.NODE_ENV === 'production') {
    app.get('*', (req, res) => {
       res.sendFile(path.join(__dirname, './client/build/index.html'))
    })
+   console.log( '!! Be sure to run "npm run build" to prepare production react code!')
 }
 
 app.listen(PORT, function(){
-   console.log( `Serving app on: http://localhost:${PORT}` )
+   console.log( `Serving app on: ${API_URL}}` )
 })
