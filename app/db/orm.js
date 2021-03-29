@@ -2,7 +2,7 @@ const mongoose = require( 'mongoose' )
 const bcrypt = require( 'bcrypt' )
 
 mongoose.connect(process.env.MONGODB_URI,
-   {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
+   {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true})
 
 // include mongoose models (it will include each file in the models directory)
 const db = require( './models' )
@@ -20,7 +20,7 @@ async function userRegister( userData ){
    }
 
    // hash the password (salt=10)
-   const passwordHash = await bcrypt.hash(userData.password, 10)
+   const passwordHash = bcrypt.hashSync(userData.password, 10)
 
    const saveData = {
       name: userData.name,
@@ -52,7 +52,7 @@ async function userLogin( email, password ) {
    }
 
    // compare the passwords to see if valid login
-   const isValidPassword = await bcrypt.compare( password, userData.password )
+   const isValidPassword = bcrypt.compareSync( password, userData.password )
    // console.log( ` [loginUser] checking password (password: ${password} ) hash(${userData.password})`, isValidPassword )
    if( !isValidPassword ) {
       return { status: false, message: 'Invalid password' }
@@ -71,7 +71,8 @@ async function userLogin( email, password ) {
 }
 
 async function userSession( userId ){
-   const userData = await db.users.findOne({ _id: userId })
+   // finding by the _id, we need to cast it to an ObjectId
+   const userData = await db.users.findOne({ _id: db.ObjectId(userId) })
    if( !userData || !userData._id ) {
       return { status: false, message: 'Invalid session' }
    }

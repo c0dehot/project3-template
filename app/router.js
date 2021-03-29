@@ -1,4 +1,4 @@
-const orm = require( './db/orm.mongoose' )
+const orm = require( './db/orm' )
 const sessionManager = require( './session-manager' )
 
 // session checking middleware
